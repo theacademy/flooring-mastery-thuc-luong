@@ -62,9 +62,24 @@ public class FlooringOrderDaoStubImpl implements FlooringOrderDao {
     @Override
     public List<Order> getOrderByDate(LocalDate date) throws FlooringDaoPersistenceException {
 
-        loadOrders(date);
+        testOrder = new Order(4);
+        testOrder.setCustomerName("Blake");
+        testOrder.setState("CA");
+        testOrder.setTaxRate(new BigDecimal("25.00"));
+        testOrder.setProductType("Tile");
+        testOrder.setArea(new BigDecimal("100.00"));
+        testOrder.setCostPerSquareFoot(new BigDecimal("25.00"));
+        testOrder.setLaborCostPerSquareFoot(new BigDecimal("25.00"));
+        testOrder.setMaterialCost(new BigDecimal("25.00"));
+        testOrder.setLaborCost(new BigDecimal("25.00"));
+        testOrder.setTax(new BigDecimal("25.00"));
+        testOrder.setTotal(new BigDecimal("25.00"));
 
-        return new ArrayList<>(orders.values());
+        List<Order> orderList = new ArrayList<>();
+
+        orderList.add(testOrder);
+
+        return orderList;
     }
 
     private Order unmarshallOrder(String orderAsText) {

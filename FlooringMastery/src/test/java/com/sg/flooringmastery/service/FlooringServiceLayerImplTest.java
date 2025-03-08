@@ -5,6 +5,8 @@ import com.sg.flooringmastery.dao.FlooringOrderDao;
 import com.sg.flooringmastery.dao.FlooringProductDao;
 import com.sg.flooringmastery.dao.FlooringTaxDao;
 import com.sg.flooringmastery.dto.Order;
+import com.sg.flooringmastery.dto.Product;
+import com.sg.flooringmastery.dto.Tax;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,14 +56,12 @@ class FlooringServiceLayerImplTest {
     void tearDown() {
     }
 
-
-
     @Test
     void validateOrderNumber() throws FlooringDaoPersistenceException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate date = LocalDate.parse("01/01/2026", formatter);
-        int orderNumber = 1;
+        int orderNumber = 4;
 
         Order matchOrder = service.validateOrderNumber(date, orderNumber);
 
@@ -70,41 +70,95 @@ class FlooringServiceLayerImplTest {
     }
 
     @Test
-    void getTaxInfo() {
+    void testValidateState() throws FlooringDaoPersistenceException {
+
+        String state = "TX";
+
+        Tax matchTax = service.validateState(state);
+
+        assertEquals("TX", matchTax.getStateAbbreviation());
+
     }
 
     @Test
-    void getOrderByDate() {
+    void testValidateProduct() throws FlooringDaoPersistenceException {
+        String productType = "Tile";
+        BigDecimal costPerSquareFoot = new BigDecimal("3.50");
+        BigDecimal laborCostPerSquareFoot = new BigDecimal("4.15");
+
+        Product testProduct = new Product(productType, costPerSquareFoot, laborCostPerSquareFoot);
+
+        Product matchProduct = service.validateProduct(productType);
+
+        assertEquals("Tile", matchProduct.getProductType());
+
+    }
+
+
+    @Test
+    void testGetTaxInfo() throws FlooringDaoPersistenceException {
+
+        String stateAbbreviation = "TX";
+        String stateName = "Texas";
+        BigDecimal taxRate = new BigDecimal("4.45");
+
+        Tax testTax = new Tax(stateAbbreviation, stateName, taxRate);
+
+        Tax taxInfo = service.getTaxInfo(stateAbbreviation);
+
+        assertEquals("TX", taxInfo.getStateAbbreviation());
+
+    }
+
+    @Test
+    void testGetOrderByDate() throws FlooringDaoPersistenceException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate date = LocalDate.parse("01/01/2026", formatter);
+
+        Order testOrder = new Order(4);
+        testOrder.setCustomerName("Blake");
+        testOrder.setState("CA");
+        testOrder.setTaxRate(new BigDecimal("25.00"));
+        testOrder.setProductType("Tile");
+        testOrder.setArea(new BigDecimal("100.00"));
+        testOrder.setCostPerSquareFoot(new BigDecimal("25.00"));
+        testOrder.setLaborCostPerSquareFoot(new BigDecimal("25.00"));
+        testOrder.setMaterialCost(new BigDecimal("25.00"));
+        testOrder.setLaborCost(new BigDecimal("25.00"));
+        testOrder.setTax(new BigDecimal("25.00"));
+        testOrder.setTotal(new BigDecimal("25.00"));
+
+        List<Order> orderList = service.getOrderByDate(date);
+
+        assertEquals("Blake", orderList.get(0).getCustomerName());
+
     }
 
     @Test
     void createOrder() {
-    }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate date = LocalDate.parse("01/01/2026", formatter);
 
-    @Test
-    void addOrder() {
-    }
+        String stateAbbreviation = "TX";
+        String stateName = "Texas";
+        BigDecimal taxRate = new BigDecimal("4.45");
 
-    @Test
-    void removeOrder() {
-    }
+        Tax testTax = new Tax(stateAbbreviation, stateName, taxRate);
 
-    @Test
-    void testCalculateMaterialCost() {
-    }
+        String productType = "Tile";
+        BigDecimal costPerSquareFoot = new BigDecimal("3.50");
+        BigDecimal laborCostPerSquareFoot = new BigDecimal("4.15");
 
-    @Test
-    void testCalculateLaborCost() {
-    }
+        Product testProduct = new Product(productType, costPerSquareFoot, laborCostPerSquareFoot);
 
-    @Test
-    void testCalculateTax() {
-    }
+        String customerName = "Blake";
+        BigDecimal area = new BigDecimal("100.00");
 
-    @Test
-    void testCalculateTotal() {
+        Order createdOrder = service.createOrder(date, customerName, testTax, testProduct, area);
 
-
+        assertEquals("Blake", createdOrder.getCustomerName());
 
     }
+
+
 }

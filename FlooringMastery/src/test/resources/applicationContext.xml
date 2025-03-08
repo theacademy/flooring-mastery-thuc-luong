@@ -39,11 +39,11 @@
     <bean id="flooringTaxDaoStub"
           class="com.sg.flooringmastery.dao.FlooringTaxDaoStubImpl"/>
 
-<!--    <bean id="serviceLayer"-->
-<!--          class="com.sg.flooringmastery.service.FlooringServiceLayerImplTest">-->
-<!--        <constructor-arg ref="flooringOrderDaoStub"/>-->
-<!--        <constructor-arg ref="flooringProductDaoStub"/>-->
-<!--        <constructor-arg ref="flooringTaxDaoStub"/>-->
-<!--    </bean>-->
+    <bean id="serviceLayer"
+          class="com.sg.flooringmastery.service.FlooringServiceLayerImpl">
+        <constructor-arg ref="flooringOrderDaoStub"/>
+        <constructor-arg ref="flooringProductDaoStub"/>
+        <constructor-arg ref="flooringTaxDaoStub"/>
+    </bean>
 
 </beans>

@@ -1,6 +1,7 @@
 package com.sg.flooringmastery.dao;
 
 import com.sg.flooringmastery.dto.Product;
+import com.sg.flooringmastery.dto.Tax;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -25,47 +26,19 @@ public class FlooringProductDaoStubImpl implements FlooringProductDao{
 
     @Override
     public List<Product> getAllProducts() throws FlooringDaoPersistenceException {
-        loadProducts();
+        String productType = "Tile";
+        BigDecimal costPerSquareFoot = new BigDecimal("3.50");
+        BigDecimal laborCostPerSquareFoot = new BigDecimal("4.15");
 
-        return new ArrayList<>(products.values());
+        Product testProduct = new Product(productType, costPerSquareFoot, laborCostPerSquareFoot);
+
+        List<Product> productList = new ArrayList<>();
+
+        productList.add(testProduct);
+
+        return productList;
     }
 
-    private Product unmarshallProduct(String productAsText) {
-
-        String[] productTokens = productAsText.split(DELIMITER);
-
-        String productType = productTokens[0];
-
-        Product productFromFile = new Product(productType);
-
-        productFromFile.setCostPerSquareFoot(new BigDecimal(productTokens[1]));
-        productFromFile.setLaborCostPerSquareFoot(new BigDecimal(productTokens[2]));
-
-        return productFromFile;
-    }
-
-    private void loadProducts() throws FlooringDaoPersistenceException {
-        Scanner sc;
-
-        try {
-            sc = new Scanner(
-                    new BufferedReader(
-                            new FileReader(PRODUCT_FILE)));
-        } catch (FileNotFoundException e) {
-            throw new FlooringDaoPersistenceException(
-                    "ERROR: Could not load product data into memory", e);
-        }
-
-        String currentLine;
-        Product currentProduct;
-
-        while (sc.hasNextLine()) {
-            currentLine = sc.nextLine();
-            currentProduct = unmarshallProduct(currentLine);
-            products.put(currentProduct.getProductType(), currentProduct);
-        }
-        sc.close();
-    }
 
 
 }
